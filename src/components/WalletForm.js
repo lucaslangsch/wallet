@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
-import { getCurrenciesListThunk } from '../redux/actions';
+import { getCurrenciesListThunk, getExchageList } from '../redux/actions';
 
 class WalletForm extends Component {
   state = {
-    value: 0,
+    id: 0,
+    value: '',
     description: '',
-    isButtonDisabled: true,
+    isButtonDisabled: false,
     method: 'Dinheiro',
     currency: '',
     tag: 'Alimentação',
@@ -18,10 +19,33 @@ class WalletForm extends Component {
     dispatch(getCurrenciesListThunk());
   }
 
+  componentDidUpdate() {
+    const { currencies } = this.props;
+    const { currency } = this.state;
+    if (currency === '') {
+      this.setState({
+        currency: currencies[0],
+      });
+    }
+  }
+
   handleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({
       [name]: value,
+    });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { dispatch } = this.props;
+    const { id, value, description, currency, method, tag } = this.state;
+
+    dispatch(getExchageList({ id, value, description, currency, method, tag }));
+    this.setState({
+      id: id + 1,
+      value: '',
+      description: '',
     });
   };
 
@@ -99,7 +123,7 @@ class WalletForm extends Component {
           disabled={ isButtonDisabled }
           onClick={ (event) => this.handleSubmit(event) }
         >
-          Entrar
+          Adicionar despesa
         </button>
       </form>
     );

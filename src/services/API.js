@@ -10,5 +10,6 @@ export const fetchCurrenciesList = async () => {
 export const fetchCurrencies = async () => {
   const response = await fetch(CURRENCIES_LIST_URL);
   const data = await response.json();
+  delete data.USDT;
   return data;
 };
