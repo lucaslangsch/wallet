@@ -72,12 +72,13 @@ class WalletForm extends Component {
             value={ currency }
             onChange={ this.handleChange }
           >
-            {currencies.map((currencie) => {
-              if (!currencie.includes('USDT')) {
-                return <option key={ currencie } value={ currencie }>{currencie}</option>;
-              }
-              return null;
-            })}
+            {currencies.map((currencie) => (
+              <option
+                key={ currencie }
+                value={ currencie }
+              >
+                {currencie}
+              </option>))}
           </select>
         </label>
         <label>
