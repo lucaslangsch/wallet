@@ -24,7 +24,7 @@ describe('Testa se a página /carteira/ renderiza:', () => {
   });
 });
 
-describe.only('Testa se a página /carteira/ renderiza:', () => {
+describe('Testa se a página /carteira/ renderiza:', () => {
   it('com as opções de input e salva na store ', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       json: () => Promise.resolve(mockData),
@@ -65,15 +65,22 @@ describe.only('Testa se a página /carteira/ renderiza:', () => {
     const descriptionElement = screen.getByRole('textbox', { name: /descrição:/i });
     const selectMethodELement = screen.getByRole('combobox', { name: /método de pagamento:/i });
     const selectTagElement = screen.getByRole('combobox', { name: /categoria:/i });
-    // const buttonAddElement = screen.getByRole('button', { name: /adicionar despesa/i });
+    const buttonAddElement = screen.getByRole('button', { name: /adicionar despesa/i });
 
     await waitFor(() => {
-      userEvent.type(inputValueElement, '1');
-      userEvent.selectOptions(selectCurrencyElement, 'USD');
-      userEvent.type(descriptionElement, 'teste');
-      userEvent.selectOptions(selectMethodELement, 'Dinheiro');
-      userEvent.selectOptions(selectTagElement, 'Alimentação');
+      expect(store.getState().wallet.currencies).toStrictEqual(currenciesForStorage);
     });
-    expect(store.getState().wallet.currencies).toStrictEqual(currenciesForStorage);
+
+    userEvent.selectOptions(selectCurrencyElement, 'USD');
+    userEvent.type(inputValueElement, '1');
+    userEvent.type(descriptionElement, 'teste');
+    userEvent.selectOptions(selectMethodELement, 'Dinheiro');
+    userEvent.selectOptions(selectTagElement, 'Alimentação');
+    userEvent.click(buttonAddElement);
+
+    await waitFor(() => {
+      expect(store.getState().wallet.expenses).toHaveLength(1);
+    });
+    screen.debug();
   });
 });
