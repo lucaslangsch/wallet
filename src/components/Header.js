@@ -5,21 +5,22 @@ import { PropTypes } from 'prop-types';
 class Header extends Component {
   state = {
     valueSum: 0,
-    value: 0,
   };
 
   componentDidUpdate(prevProps) {
     const { expenses } = this.props;
-    if (expenses.length !== prevProps.expenses.length) {
-      const convertValue = (
-        expenses[expenses.length - 1]
-          .exchangeRates[expenses[expenses.length - 1].currency]).ask;
+    if (expenses.length !== prevProps.expenses.length && expenses.length > 0) {
+      const sum = expenses.reduce((acc, expense) => {
+        const currencyToExchange = expense.exchangeRates[expense.currency];
+        const valueBrl = (expense.value * currencyToExchange.ask);
+        return acc + parseFloat(valueBrl);
+      }, 0);
       this.setState({
-        value: parseFloat(expenses[expenses.length - 1].value) * parseFloat(convertValue),
-      }, () => {
-        this.setState((state) => (
-          { valueSum: parseFloat(state.valueSum) + parseFloat(state.value) }
-        ));
+        valueSum: sum,
+      });
+    } else if (expenses.length !== prevProps.expenses.length && expenses.length === 0) {
+      this.setState({
+        valueSum: 0,
       });
     }
   }

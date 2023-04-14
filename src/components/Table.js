@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
+import { removeExpense, editExpense } from '../redux/actions/index';
 
 class Table extends Component {
   // state = {
@@ -22,9 +23,19 @@ class Table extends Component {
   //   }
   // }
 
+  handleClick = (id) => {
+    const { dispatch } = this.props;
+    dispatch(removeExpense(id));
+  };
+
+  handleEditClick = (id) => {
+    const { dispatch } = this.props;
+    dispatch(editExpense(id));
+  };
+
   render() {
     const { expenses } = this.props;
-
+    const sortedExpenses = expenses.sort((a, b) => a.id - b.id);
     return (
       <table>
         <thead>
@@ -42,7 +53,7 @@ class Table extends Component {
         </thead>
         <tbody>
           {
-            expenses && expenses.map(({
+            expenses && sortedExpenses.map(({
               id, value, description, method, currency, tag, exchangeRates,
             }) => {
               const currencyToExchange = exchangeRates[currency];
@@ -59,6 +70,20 @@ class Table extends Component {
                   <td>{exchangeRate}</td>
                   <td>{valueBrl}</td>
                   <td>Real</td>
+                  <td>
+                    <button
+                      data-testid="delete-btn"
+                      onClick={ () => this.handleClick(id) }
+                    >
+                      Deletar
+                    </button>
+                    <button
+                      data-testid="edit-btn"
+                      onClick={ () => this.handleEditClick(id) }
+                    >
+                      Editar
+                    </button>
+                  </td>
                 </tr>
               );
             })
@@ -77,6 +102,7 @@ Table.propTypes = {
   expenses: PropTypes.arrayOf(
     PropTypes.shape({}),
   ).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps)(Table);
