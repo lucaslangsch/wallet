@@ -3,15 +3,17 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 import WalletForm from '../components/WalletForm';
 import Table from '../components/Table';
+import CardNews from '../components/CardNews';
 // import { PropTypes } from 'prop-types';
 
 class Wallet extends React.Component {
   render() {
     return (
-      <div>
+      <div className="relative bg-emerald-600 h-screen">
         <Header />
         <WalletForm />
         <Table />
+        <CardNews />
       </div>
     );
   }

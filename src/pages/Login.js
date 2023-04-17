@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { addUser } from '../redux/actions';
+import backgroundImg from '../assets/bg.png';
 
 class Login extends React.Component {
   state = {
@@ -41,37 +42,63 @@ class Login extends React.Component {
   render() {
     const { email, password, isButtonDisabled } = this.state;
     return (
-      <form>
-        <label>
-          Email:
-          <input
-            type="email"
-            data-testid="email-input"
-            placeholder="Digite aqui seu email"
-            name="email"
-            value={ email }
-            onChange={ this.handleChange }
-          />
-        </label>
-        <label>
-          Senha:
-          <input
-            type="password"
-            data-testid="password-input"
-            placeholder="Digite aqui sua senha"
-            name="password"
-            value={ password }
-            onChange={ this.handleChange }
-          />
-        </label>
-        <button
-          type="submit"
-          disabled={ isButtonDisabled }
-          onClick={ (event) => this.handleSubmit(event) }
+      <div
+        className="h-screen flex justify-center items-center"
+        style={ { backgroundImage: `url(${backgroundImg})`, backgroundSize: '10% auto' } }
+      >
+        <form
+          className="w-2/5 h-3/6 rounded-2xl backdrop-blur
+        gap-y-36 flex flex-col justify-center items-center"
         >
-          Entrar
-        </button>
-      </form>
+          <div className="flex flex-col w-2/4">
+
+            <label htmlFor="email">
+              Email:
+            </label>
+            <input
+              id="email"
+              type="email"
+              data-testid="email-input"
+              placeholder="Digite aqui seu email"
+              name="email"
+              value={ email }
+              onChange={ this.handleChange }
+              className="rounded-md border-0 focus:ring-2
+              focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+            />
+          </div>
+          <div className="flex flex-col w-2/4">
+
+            <label htmlFor="senha">
+              Senha:
+            </label>
+            <input
+              id="senha"
+              type="password"
+              data-testid="password-input"
+              placeholder="Digite aqui sua senha"
+              name="password"
+              value={ password }
+              onChange={ this.handleChange }
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={ isButtonDisabled }
+            onClick={ (event) => this.handleSubmit(event) }
+            className={ `py-2 px-4 bg-gray-400 rounded-md font-medium text-white w-2/4
+            ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : (
+        'bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-green-600')}` }
+            ref={ (button) => {
+              if (button) {
+                button.classList.toggle('bg-green-500', !isButtonDisabled);
+              }
+            } }
+          >
+            Entrar
+          </button>
+        </form>
+      </div>
     );
   }
 }

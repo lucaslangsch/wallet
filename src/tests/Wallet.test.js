@@ -81,6 +81,5 @@ describe('Testa se a página /carteira/ renderiza:', () => {
     await waitFor(() => {
       expect(store.getState().wallet.expenses).toHaveLength(1);
     });
-    screen.debug();
   });
 });
