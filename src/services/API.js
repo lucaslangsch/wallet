@@ -17,5 +17,5 @@ export const fetchCurrencies = async () => {
 export const fetchNews = async () => {
   const response = await fetch('https://newsapi.org/v2/top-headlines?category=business&country=br&pageSize=20&apiKey=ef3e427f77064b48abcfeefd28544987');
   const data = await response.json();
-  return data.articles;
+  return data;
 };

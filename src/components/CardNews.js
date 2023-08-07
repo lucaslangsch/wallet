@@ -8,6 +8,7 @@ class CardNews extends React.Component {
     super();
     this.state = {
       news: [],
+      error: '',
       settings: {
         dots: true,
         infinite: true,
@@ -24,14 +25,20 @@ class CardNews extends React.Component {
   componentDidMount() {
     fetchNews()
       .then((response) => {
-        this.setState({ news: response });
+        if (response.status === 'ok') {
+          this.setState({ news: response.articles });
+        } else {
+          throw new Error(response.message);
+        }
+      })
+      .catch((error) => {
+        this.setState({ error: error.message });
       });
   }
 
   render() {
-    const { news, settings } = this.state;
-
-    if (news.length > 0) {
+    const { news, settings, error } = this.state;
+    if (news.length > 1) {
       return (
         <footer className="bg-white absolute inset-x-0 bottom-0">
           <div className="w-full px-4 py-8 sm:px-6 sm:py-6 lg:px-8">
@@ -63,7 +70,10 @@ class CardNews extends React.Component {
     }
 
     return (
-      <span className="bg-white absolute inset-x-0 bottom-0">CARREGANDO...</span>
+      <p className="bg-white absolute inset-x-0 bottom-0">
+        CARREGANDO...
+        {error ? <span>Ops, tivemos um problema mas já estamos verificando</span> : null}
+      </p>
     );
   }
 }
